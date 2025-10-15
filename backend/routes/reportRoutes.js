@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { uploadAndProcessReport } = require('../controllers/reportController');
+const { uploadAndProcessReport, getAllReports, getReportByPan  } = require('../controllers/reportController');
 
 const router = express.Router();
 
@@ -17,8 +17,10 @@ const upload = multer({
     }
 });
 
-// Define the POST route for file upload
+// Define routes
 // The string 'reportFile' must match the key in the form-data from the frontend
 router.post('/upload', upload.single('reportFile'), uploadAndProcessReport);
+router.route('/reports').get(getAllReports);
+router.route('/reports/:pan').get(getReportByPan);
 
 module.exports = router;

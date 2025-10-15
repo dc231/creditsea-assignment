@@ -71,3 +71,34 @@ exports.uploadAndProcessReport = async (req, res) => {
     res.status(500).json({ message: 'Error processing XML file.', error: error.message });
   }
 };
+
+// @desc    Get all processed reports (basic info)
+// @route   GET /api/reports
+// @access  Public
+exports.getAllReports = async (req, res) => {
+  try {
+    // We only select the name, pan, and createdAt fields to keep the list lightweight
+    const reports = await CreditReport.find({}).select('name pan createdAt');
+    res.status(200).json(reports);
+  } catch (error) {
+    console.error('Error fetching reports:', error);
+    res.status(500).json({ message: 'Server error while fetching reports.' });
+  }
+};
+
+// @desc    Get a single report by PAN
+// @route   GET /api/reports/:pan
+// @access  Public
+exports.getReportByPan = async (req, res) => {
+  try {
+    const report = await CreditReport.findOne({ pan: req.params.pan });
+    if (!report) {
+      return res.status(404).json({ message: 'Report not found.' });
+    }
+    res.status(200).json(report);
+  } catch (error)
+  {
+    console.error('Error fetching report by PAN:', error);
+    res.status(500).json({ message: 'Server error while fetching the report.' });
+  }
+};
