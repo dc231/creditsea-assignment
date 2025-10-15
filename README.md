@@ -1,6 +1,6 @@
 # CreditSea Full-Stack Engineer Assignment
 
-[cite_start]This is a full-stack MERN application designed to process, store, and display soft credit pull data from XML files, as per the assignment requirements from CreditSea. [cite: 1, 3]
+This project is a complete MERN stack solution built for CreditSea, designed to automate the processing of Experian soft credit pull XML files. The application provides a seamless workflow: a user uploads an XML file via a RESTful API, the backend extracts and persists the credit data into MongoDB, and a dynamic React interface renders a detailed, multi-section report. 
 
 ---
 
@@ -18,7 +18,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Backend**: Node.js, Express.js
 * **Frontend**: React (Vite), React Router
@@ -99,7 +99,7 @@ You will need two separate terminals to run both the backend and frontend server
 
 ---
 
-## 📝 API Endpoints
+## API Endpoints
 
 The following RESTful API endpoints were created:
 
