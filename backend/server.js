@@ -10,10 +10,21 @@ const app = express();
 const PORT = process.env.PORT || 5001; 
 
 // Middleware setup
-app.use(cors()); // Enable Cross-Origin Resource Sharing
+const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+};
+app.use(cors(corsOptions)); // Use the new cors options
 app.use(express.json()); // Enable parsing of JSON request bodies
 
-// A simple test route to check if the server is running
+
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the CreditSea API!' });
 });
