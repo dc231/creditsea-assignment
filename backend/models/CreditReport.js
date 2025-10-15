@@ -5,6 +5,7 @@ const AccountSchema = new mongoose.Schema({
   subscriberName: { type: String, trim: true },
   accountNumber: { type: String, trim: true },
   accountType: { type: String },
+  isCreditCard: { type: Boolean, default: false },
   openDate: { type: Date },
   currentBalance: { type: Number },
   amountOverdue: { type: Number },

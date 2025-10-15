@@ -40,17 +40,39 @@ exports.uploadAndProcessReport = async (req, res) => {
       enquiriesLast7Days: parseInt(getSafe(() => report.TotalCAPS_Summary.TotalCAPSLast7Days, 0), 10),
 
       // Credit Accounts Information
-      accounts: getSafe(() => report.CAIS_Account.CAIS_Account_DETAILS, []).map(acc => ({
-        subscriberName: getSafe(() => acc.Subscriber_Name),
-        accountNumber: getSafe(() => acc.Account_Number),
-        accountType: getSafe(() => acc.Account_Type),
-        openDate: getSafe(() => acc.Open_Date),
-        currentBalance: parseInt(getSafe(() => acc.Current_Balance, 0), 10),
-        amountOverdue: parseInt(getSafe(() => acc.Amount_Past_Due, 0), 10),
-        paymentHistory: getSafe(() => acc.Payment_History_Profile),
-        dateReported: getSafe(() => acc.Date_Reported),
-        address: `${getSafe(() => acc.CAIS_Holder_Address_Details.First_Line_Of_Address_non_normalized, '')}, ${getSafe(() => acc.CAIS_Holder_Address_Details.City_non_normalized, '')}`
-      }))
+      accounts: getSafe(() => report.CAIS_Account.CAIS_Account_DETAILS, []).map(acc => {
+        const addressDetails = getSafe(() => acc.CAIS_Holder_Address_Details, {});
+        const addressParts = [
+          addressDetails.First_Line_Of_Address_non_normalized,
+          addressDetails.Second_Line_Of_Address_non_normalized,
+          addressDetails.Third_Line_Of_Address_non_normalized,
+          addressDetails.City_non_normalized
+        ].filter(Boolean); // Filter out any null/undefined parts
+        
+        let fullAddress = addressParts.join(', ');
+        const zip = addressDetails.ZIP_Postal_Code_non_normalized;
+        if (zip) {
+          fullAddress += ` - ${zip}`;
+        }
+
+        // --- CREDIT CARD IDENTIFICATION LOGIC ---
+        const accountType = getSafe(() => acc.Account_Type);
+        const creditCardTypes = ['10', '51', '52'];
+        const isCreditCard = creditCardTypes.includes(accountType);
+
+        return {
+          subscriberName: getSafe(() => acc.Subscriber_Name),
+          accountNumber: getSafe(() => acc.Account_Number),
+          accountType: accountType,
+          isCreditCard: isCreditCard, // Set the flag
+          openDate: getSafe(() => acc.Open_Date),
+          currentBalance: parseInt(getSafe(() => acc.Current_Balance, 0), 10),
+          amountOverdue: parseInt(getSafe(() => acc.Amount_Past_Due, 0), 10),
+          paymentHistory: getSafe(() => acc.Payment_History_Profile),
+          dateReported: getSafe(() => acc.Date_Reported),
+          address: fullAddress
+        };
+      })
     };
 
     if (!extractedData.pan) {

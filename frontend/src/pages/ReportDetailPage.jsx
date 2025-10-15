@@ -63,15 +63,20 @@ const ReportDetailPage = () => {
               <th>Account Number</th>
               <th>Current Balance</th>
               <th>Amount Overdue</th>
+              <th>Address</th>
             </tr>
           </thead>
           <tbody>
             {report.accounts.map((acc, index) => (
               <tr key={index}>
-                <td>{acc.subscriberName}</td>
+                <td>
+                  {acc.subscriberName}
+                  {acc.isCreditCard && <span className="badge">Credit Card</span>}
+                </td>
                 <td>{acc.accountNumber}</td>
                 <td>₹{acc.currentBalance?.toLocaleString('en-IN')}</td>
                 <td>₹{acc.amountOverdue?.toLocaleString('en-IN')}</td>
+                <td>{acc.address}</td>
               </tr>
             ))}
           </tbody>
