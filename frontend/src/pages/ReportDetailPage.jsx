@@ -11,7 +11,8 @@ const ReportDetailPage = () => {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const { data } = await axios.get(`/api/reports/${pan}`);
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/reports/${pan}`;
+        const { data } = await axios.get(apiUrl);
         setReport(data);
       } catch (err) {
         setError('Failed to fetch report data.');

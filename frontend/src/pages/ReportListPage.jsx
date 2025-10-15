@@ -9,7 +9,8 @@ const ReportListPage = () => {
 
   const fetchReports = async () => {
     try {
-      const { data } = await axios.get('/api/reports');
+      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/reports`;
+      const { data } = await axios.get(apiUrl);
       setReports(data);
     } catch (error) {
       console.error('Failed to fetch reports', error);
